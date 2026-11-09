@@ -31,40 +31,49 @@ MONO = font("GeistMono.ttf", wght=500)
 CJK_FONT = font("CJKSub.otf")
 
 # ───────────────────────────────────────────────────────────── color
+# Palette sampled from the two reference gradients.
+#   warm  #FFFDCD → #E8F7D6 → #C3EEEE → #A4E6FF   (cream · lime · mint · sky)
+#   cool  #BEF9F4 → #CFF4FD → #ECE4F7 → #FEDBF3   (mint · sky · lavender · pink)
 THEMES = {
     "dark": dict(
-        bg="#07070A", surface="#0B0B10", ink="#F2F2F5", muted="#A0A0AE", faint="#666674",
-        line="#FFFFFF", line_op=.085, rim_op=.22, g=("#2DD4BF", "#818CF8", "#C084FC"),
-        aurora=.58, grain=.065, island_stroke=.16,
+        bg="#06090B", surface="#0A0F11", ink="#F2F7F5", muted="#9EACA9", faint="#667471",
+        line="#E9FBF7", line_op=.09, rim_op=.22,
+        g=("#7FE7DA", "#9FD0FF", "#D9C2FA"),
+        glow=("#2A8C80", "#2F79B8", "#6A55B0", "#B04C8A"),
+        wash=("#0E3B3A", "#123A52", "#2A2450", "#4A2740"), wash_op=.85,
+        aurora=.5, grain=.06, island="#05080A", island_stroke=.16, ok="#6FE3D6",
     ),
     "light": dict(
-        bg="#F8F8F6", surface="#FFFFFF", ink="#101014", muted="#555562", faint="#90909E",
-        line="#000000", line_op=.075, rim_op=.06, g=("#0D9488", "#4F46E5", "#9333EA"),
-        aurora=.26, grain=.04, island_stroke=0,
+        bg="#F7FAF5", surface="#FFFFFF", ink="#11181A", muted="#556164", faint="#8C999B",
+        line="#082A26", line_op=.075, rim_op=.1,
+        g=("#0E9C94", "#4C86D8", "#9A6AD8"),
+        glow=("#BEF9F4", "#CFF4FD", "#ECE4F7", "#FEDBF3"),
+        wash=("#FFFDCD", "#E8F7D6", "#C3EEEE", "#A4E6FF"), wash_op=.62,
+        aurora=.55, grain=.035, island="#05080A", island_stroke=0, ok="#0E9C94",
     ),
 }
 
 # ───────────────────────────────────────────────────────────── content
 FEATURED = [
     # repo, accent, english line, chinese line, fallback topics
-    ("Aries-AI", "#FF6A13", "An on-device Android AI agent that runs your phone.",
+    ("Aries-AI", "#2E93C4", "An on-device Android AI agent that runs your phone.",
      "安卓端 AI Agent · 跨 App 自动化 · 仅需配置 API 即用", ["agent", "android", "kotlin", "llm"]),
-    ("Label-Once", "#8B5CF6", "Local Windows AI annotation, training & dataset workflow.",
+    ("Label-Once", "#8E6BD8", "Local Windows AI annotation, training & dataset workflow.",
      "本地图像/视频标注 · 训练 · 数据集一体化", ["annotation", "windows", "dataset", "local-first"]),
 ]
 
 ARCHIVE = [
-    ("Open-Aries-AI", "Aries AI for the Windows desktop", "Windows 桌面端 · C++ · MIT", "C++", "#10B981"),
-    ("Open-AutoGLM", "Open phone-agent model & framework", "开放手机 Agent 模型 · Apache-2.0", "Python", "#3B82F6"),
+    ("Open-Aries-AI", "Aries AI for the Windows desktop", "Windows 桌面端 · C++ · MIT", "C++", "#17A398"),
+    ("Open-AutoGLM", "Open phone-agent model & framework", "开放手机 Agent 模型 · Apache-2.0", "Python", "#C266A0"),
 ]
 
 TOOLKIT = [
-    ("Languages", ["Kotlin", "Python", "C++", "Java", "Shell"], "#2DD4BF"),
-    ("Mobile & UI", ["Android", "Jetpack Compose", "Accessibility", "Windows", "WebView"], "#818CF8"),
-    ("AI systems", ["LLM Agents", "On-device", "Automation", "Vision", "Local-first"], "#C084FC"),
-    ("Tooling", ["Git", "GitHub Actions", "Gradle", "Docker", "VS Code"], "#38BDF8"),
+    ("Languages", ["Kotlin", "Python", "C++", "Java", "Shell"], "#2BB3AB"),
+    ("Mobile & UI", ["Android", "Jetpack Compose", "Accessibility", "Windows", "WebView"], "#4C86D8"),
+    ("AI systems", ["LLM Agents", "On-device", "Automation", "Vision", "Local-first"], "#9A6AD8"),
+    ("Tooling", ["Git", "GitHub Actions", "Gradle", "Docker", "VS Code"], "#D266A6"),
 ]
-NOW_BUILDING = "Label-Once"
+ISLAND_PROJECTS = ["Aries AI", "Label-Once", "Open-Aries-AI", "Open-AutoGLM"]
 
 
 # ───────────────────────────────────────────────────────────── primitives
@@ -82,12 +91,20 @@ def svg(w: int, h: int, body: list[str], css: str = "") -> str:
 
 def defs(t: dict, blur: int = 60, extra: str = "") -> str:
     g1, g2, g3 = t["g"]
+    stops = "".join(f'<stop offset="{o}" stop-color="{c}"/>'
+                    for o, c in zip((0, .34, .67, 1), t["wash"]))
     return f"""<defs>
 <linearGradient id="acc" x1="0" y1="0" x2="1" y2=".25"><stop offset="0" stop-color="{g1}"/><stop offset=".55" stop-color="{g2}"/><stop offset="1" stop-color="{g3}"/></linearGradient>
+<linearGradient id="wash" x1="0" y1="0" x2="1" y2=".35">{stops}</linearGradient>
 <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="{t['line']}" stop-opacity="0"/><stop offset=".35" stop-color="{g1}" stop-opacity="{t['rim_op']}"/><stop offset=".65" stop-color="{g3}" stop-opacity="{t['rim_op']}"/><stop offset="1" stop-color="{t['line']}" stop-opacity="0"/></linearGradient>
 <filter id="blur" x="-80%" y="-80%" width="260%" height="260%"><feGaussianBlur stdDeviation="{blur}"/></filter>
 <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
 {extra}</defs>"""
+
+
+def wash(t: dict, w: int, h: int, op: float | None = None) -> str:
+    """Reference-gradient wash: warm cream→sky in light, deep mint→rose in dark."""
+    return f'<rect width="{w}" height="{h}" fill="url(#wash)" opacity="{op if op is not None else t["wash_op"]}"/>'
 
 
 def aurora(blobs, opacity: float) -> str:
@@ -132,34 +149,48 @@ def surface(t, w, h, rx=24):
 
 # ───────────────────────────────────────────────────────────── hero
 def island(t, cx: float, cy: float) -> str:
-    """A tiny Dynamic Island that wakes up, shows what I'm building, and sleeps."""
+    """A tiny Dynamic Island that wakes up, carousels the project names, and sleeps."""
     cw, ch, ew, eh = 132, 36, 456, 50
-    kt, ks = "0;.12;.22;.70;.80;1", ";".join([".5 0 .1 1"] * 5)
+    dur = 18
+    kt = "0;.10;.18;.80;.88;1"
+    ks = ";".join([".5 0 .1 1"] * 5)
     vals = lambda a, b: f"{a};{a};{b};{b};{a};{a}"
-    anim = lambda attr, a, b: (f'<animate attributeName="{attr}" values="{vals(a, b)}" keyTimes="{kt}" dur="9s" '
+    anim = lambda attr, a, b: (f'<animate attributeName="{attr}" values="{vals(a, b)}" keyTimes="{kt}" dur="{dur}s" '
                                f'repeatCount="indefinite" calcMode="spline" keySplines="{ks}"/>')
-    pill = (f'<rect x="{cx - cw / 2}" y="{cy - ch / 2}" width="{cw}" height="{ch}" rx="{ch / 2}" fill="#050508" '
-            f'stroke="#fff" stroke-opacity="{t["island_stroke"]}">'
+    pill = (f'<rect x="{cx - cw / 2}" y="{cy - ch / 2}" width="{cw}" height="{ch}" rx="{ch / 2}" fill="{t["island"]}" '
+            f'stroke="{t["line"]}" stroke-opacity="{t["island_stroke"]}">'
             + anim("x", cx - cw / 2, cx - ew / 2) + anim("y", cy - ch / 2, cy - eh / 2)
             + anim("width", cw, ew) + anim("height", ch, eh) + anim("rx", ch / 2, eh / 2) + "</rect>")
-    show = ('<animate attributeName="opacity" values="0;0;0;1;1;0;0" keyTimes="0;.12;.2;.27;.66;.71;1" '
-            'dur="9s" repeatCount="indefinite"/>')
-    hide = ('<animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;.11;.14;.78;.82;1" '
-            'dur="9s" repeatCount="indefinite"/>')
+    show = ('<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;.17;.19;.79;.81;1" '
+            f'dur="{dur}s" repeatCount="indefinite"/>')
+    hide = ('<animate attributeName="opacity" values="1;1;0;0;1;1" keyTimes="0;.16;.18;.80;.82;1" '
+            f'dur="{dur}s" repeatCount="indefinite"/>')
     x0 = cx - ew / 2 + 24
-    lab, lw = text(MONO, "NOW BUILDING", 11, x0 + 16, cy + 4, tracking=.1, fill="#888896")
-    name, _ = text(MEDIUM, NOW_BUILDING, 15, x0 + 16 + lw + 12, cy + 5.5, fill="#F4F4F6")
+    lab, lw = text(MONO, "PROJECTS", 11, x0 + 16, cy + 4, tracking=.1, fill="#8A9A98")
+    name_x = x0 + 16 + lw + 14
+    slot = (.80 - .18) / len(ISLAND_PROJECTS)
+    names = []
+    for i, nm in enumerate(ISLAND_PROJECTS):
+        s, e = .18 + i * slot, .18 + (i + 1) * slot
+        p, _ = text(MEDIUM, nm, 15, name_x, cy + 5.5, fill="#F4F8F6")
+        times = f"0;{s - .012:.3f};{s:.3f};{e - .016:.3f};{e:.3f};1"
+        names.append(f'<g opacity="0">{p}'
+                     f'<animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="{times}" '
+                     f'dur="{dur}s" repeatCount="indefinite"/>'
+                     f'<animateTransform attributeName="transform" type="translate" '
+                     f'values="10 0;10 0;0 0;0 0;-10 0;-10 0" keyTimes="{times}" '
+                     f'dur="{dur}s" repeatCount="indefinite"/></g>')
     bars = []
     for i, (lo, hi, d) in enumerate([(6, 16, .9), (10, 22, .7), (4, 14, 1.1), (8, 20, .8), (5, 12, 1.0)]):
         bx = cx + ew / 2 - 24 - (5 - i) * 6
         bars.append(f'<rect x="{bx}" width="3" rx="1.5" fill="{t["g"][0] if i % 2 else t["g"][2]}">'
                     f'<animate attributeName="height" values="{lo};{hi};{lo}" dur="{d}s" repeatCount="indefinite"/>'
                     f'<animate attributeName="y" values="{cy - lo / 2};{cy - hi / 2};{cy - lo / 2}" dur="{d}s" repeatCount="indefinite"/></rect>')
-    content = (f'<g opacity="0">{show}<circle cx="{x0 + 4}" cy="{cy}" r="4" fill="#34D399">'
+    content = (f'<g opacity="0">{show}<circle cx="{x0 + 4}" cy="{cy}" r="4" fill="{t["ok"]}">'
                f'<animate attributeName="opacity" values="1;.35;1" dur="1.6s" repeatCount="indefinite"/></circle>'
-               f'{lab}{name}{"".join(bars)}</g>')
+               f'{lab}{"".join(names)}{"".join(bars)}</g>')
     lens = (f'<g>{hide}<circle cx="{cx + 42}" cy="{cy}" r="7" fill="#14141C"/>'
-            f'<circle cx="{cx + 42}" cy="{cy}" r="3" fill="#1E2A4A"/><circle cx="{cx + 43.5}" cy="{cy - 1.5}" r="1" fill="#6A8CFF" opacity=".8"/></g>')
+            f'<circle cx="{cx + 42}" cy="{cy}" r="3" fill="#1E2A4A"/><circle cx="{cx + 43.5}" cy="{cy - 1.5}" r="1" fill="{t["g"][1]}" opacity=".8"/></g>')
     return pill + lens + content
 
 
@@ -183,14 +214,14 @@ def hero_blueprint(t) -> str:
 
 def hero(t: dict) -> str:
     W, H = 1200, 620
-    g1, g2, g3 = t["g"]
     b = [
         defs(t, 70),
         f'<clipPath id="frame"><rect width="{W}" height="{H}" rx="28"/></clipPath>',
         '<g clip-path="url(#frame)">',
         f'<rect width="{W}" height="{H}" fill="{t["bg"]}"/>',
-        aurora([(940, 150, 230, g1, 20, -70, 40), (760, 480, 260, g2, 24, 60, -40),
-                (1140, 420, 210, g3, 18, -50, -60), (220, 720, 240, g2, 26, 80, -30)], t["aurora"]),
+        wash(t, W, H),
+        aurora([(940, 150, 230, t["glow"][0], 20, -70, 40), (760, 480, 260, t["glow"][1], 24, 60, -40),
+                (1140, 420, 210, t["glow"][2], 18, -50, -60), (220, 720, 240, t["glow"][3], 26, 80, -30)], t["aurora"]),
         hero_blueprint(t),
         grain(t, W, H),
         "</g>",
@@ -223,7 +254,7 @@ def hero(t: dict) -> str:
         lab, _ = label(k, x, 554, t, size=12)
         vx = x + (16 if "STATUS" in k else 0)
         val, _ = text(MEDIUM, v, 18, vx, 586, fill=t["ink"])
-        dot = (f'<circle cx="{x + 5}" cy="580" r="4.5" fill="#22C55E"><animate attributeName="r" values="4.5;6.2;4.5" '
+        dot = (f'<circle cx="{x + 5}" cy="580" r="4.5" fill="{t["ok"]}"><animate attributeName="r" values="4.5;6.2;4.5" '
                f'dur="2s" repeatCount="indefinite"/></circle>') if "STATUS" in k else ""
         meta.append(fade(lab + dot + val, .52 + i * .07))
     b += meta
@@ -283,7 +314,6 @@ def archive(t) -> str:
 
 def footer(t) -> str:
     W, H = 1200, 290
-    g1, g2, g3 = t["g"]
     a, wa = text(SERIF, "Thanks for ", 68, 0, 0)
     c, wc = text(SERIF_I, "stopping by.", 68, 0, 0)
     x0 = (W - wa - wc) / 2
@@ -291,7 +321,8 @@ def footer(t) -> str:
     c, _ = text(SERIF_I, "stopping by.", 68, x0 + wa, 146, fill="url(#acc)")
     m, _ = label("on-device, always   ·   github.com/ZG0704666", W / 2, 204, t, anchor="middle")
     return svg(W, H, [defs(t, 50),
-                      aurora([(520, 130, 120, g1, 16, 60, 10), (700, 140, 120, g3, 20, -60, -10)], t["aurora"] * .45),
+                      aurora([(520, 130, 120, t["glow"][0], 16, 60, 10),
+                              (700, 140, 120, t["glow"][2], 20, -60, -10)], t["aurora"] * .45),
                       fade(a + c, 0), fade(m, .16),
                       fade(f'<rect x="{W / 2 - 24}" y="238" width="48" height="3" rx="1.5" fill="url(#acc)"/>', .24)])
 
@@ -396,8 +427,8 @@ def card(t, idx: int, repo: dict, accent: str, en: str, zh: str, fallback: list[
     W, H = 600, 340
     b = [defs(t, 55), f'<clipPath id="r"><rect width="{W}" height="{H}" rx="24"/></clipPath>']
     bg, border = surface(t, W, H)
-    b += [bg, '<g clip-path="url(#r)">',
-          aurora([(530, 35, 155, accent, 14, -40, 30), (380, -40, 115, t["g"][1], 18, 40, 20)], t["aurora"] * .78),
+    b += [bg, '<g clip-path="url(#r)">', wash(t, W, H, t["wash_op"] * .5),
+          aurora([(530, 35, 155, accent, 14, -40, 30), (380, -40, 115, t["glow"][1], 18, 40, 20)], t["aurora"] * .78),
           grain(t, W, H), "</g>", border]
 
     n, _ = label(f"0{idx} / PROJECT", 40, 54, t, size=12.5)
@@ -469,8 +500,8 @@ def stats(t, u: dict) -> str:
     )
     b = [defs(t, 70, extra_defs), f'<clipPath id="r"><rect width="{W}" height="{H}" rx="24"/></clipPath>']
     bg, border = surface(t, W, H)
-    b += [bg, '<g clip-path="url(#r)">',
-          aurora([(1120, 20, 200, g3, 22, -60, 40), (80, 640, 200, g1, 26, 60, -30)], t["aurora"] * .6),
+    b += [bg, '<g clip-path="url(#r)">', wash(t, W, H, t["wash_op"] * .45),
+          aurora([(1120, 20, 200, t["glow"][3], 22, -60, 40), (80, 640, 200, t["glow"][0], 26, 60, -30)], t["aurora"] * .6),
           grain(t, W, H), "</g>", border]
 
     # headline numbers
