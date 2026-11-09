@@ -35,26 +35,6 @@
       </a>
     </td>
   </tr>
-  <tr>
-    <td width="50%">
-      <a href="https://github.com/ZG0704666/Open-Aries-AI">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ZG0704666/ZG0704666/output/card-Open-Aries-AI-dark.svg"/>
-          <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/ZG0704666/ZG0704666/output/card-Open-Aries-AI-light.svg"/>
-          <img width="100%" src="https://raw.githubusercontent.com/ZG0704666/ZG0704666/output/card-Open-Aries-AI-dark.svg" alt="Open-Aries-AI"/>
-        </picture>
-      </a>
-    </td>
-    <td width="50%">
-      <a href="https://github.com/ZG0704666/Open-AutoGLM">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ZG0704666/ZG0704666/output/card-Open-AutoGLM-dark.svg"/>
-          <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/ZG0704666/ZG0704666/output/card-Open-AutoGLM-light.svg"/>
-          <img width="100%" src="https://raw.githubusercontent.com/ZG0704666/ZG0704666/output/card-Open-AutoGLM-dark.svg" alt="Open-AutoGLM"/>
-        </picture>
-      </a>
-    </td>
-  </tr>
 </table>
 
 <a href="https://github.com/ZG0704666?tab=repositories">

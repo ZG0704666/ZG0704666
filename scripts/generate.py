@@ -51,10 +51,6 @@ FEATURED = [
      "安卓端 AI Agent · 跨 App 自动化 · 仅需配置 API 即用", ["agent", "android", "kotlin", "llm"]),
     ("Label-Once", "#8B5CF6", "Local Windows AI annotation, training & dataset workflow.",
      "本地图像/视频标注 · 训练 · 数据集一体化", ["annotation", "windows", "dataset", "local-first"]),
-    ("Open-Aries-AI", "#10B981", "Aries AI for the Windows desktop.",
-     "Windows 桌面端的 Aries AI", ["desktop", "cpp", "windows"]),
-    ("Open-AutoGLM", "#3B82F6", "An open phone agent model & framework.",
-     "开放的手机 Agent 模型与框架", ["phone-agent", "framework", "glm"]),
 ]
 
 ARCHIVE = [
